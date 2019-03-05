@@ -1,0 +1,22 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Alert"
+metadata:
+  name: syfoalerts
+  labels:
+    team: teamsykefravr
+spec:
+  receivers:
+    slack:
+      channel: '#syfo-alerts-prod'
+      #prependText: '<!here> | '
+  alerts:
+    - alert: Applikasjon nede
+      expr: up{app=~"pdf-gen|syfoarbeidsgivertilgang|syfogsak|syfoinntektsmelding|syfonarmesteleder|syfoservicestrangler|syfosoknadvarsel|syfosyketilfelle|syfoaltinn|syfovarsel",job="kubernetes-pods"} < 1
+      for: 2m
+      description: "{{ $labels.app }} er nede i {{ $labels.kubernetes_namespace }}"
+      action: "`kubeclt describe pod {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}` for events, og `kubectl logs {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}` for logger"
+    - alert: Ingen metrikker fra app
+      expr: absent(up{app=~"pdf-gen|syfoarbeidsgivertilgang|syfogsak|syfoinntektsmelding|syfonarmesteleder|syfoservicestrangler|syfosoknadvarsel|syfosyketilfelle|syfoaltinn|syfovarsel",job="kubernetes-pods"})
+      for: 3m
+      description: "{{ $labels.app }} rapporterer ingen metrikker i {{ $labels.kubernetes_namespace }}"
+      action: "Sjekk om {{ $labels.app }} i {{ $labels.kubernetes_namespace }} er oppe"
