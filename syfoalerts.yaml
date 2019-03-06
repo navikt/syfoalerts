@@ -20,7 +20,7 @@ spec:
       for: 3m
       description: "{{ $labels.app }} rapporterer ingen metrikker i {{ $labels.kubernetes_namespace }}"
       action: "Sjekk om {{ $labels.app }} i {{ $labels.kubernetes_namespace }} er oppe"
-  - alert: Syfonarmesteleder er nede (test!)
+    - alert: Syfonarmesteleder er nede (test!)
       expr: up{app="syfonarmesteleder",job="kubernetes-pods"} < 1
       for: 0m
       description: "{{ $labels.app }} er nede i {{ $labels.kubernetes_namespace }}"
