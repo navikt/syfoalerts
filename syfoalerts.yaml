@@ -24,10 +24,3 @@ spec:
       action: "Sjekk om {{ $labels.app }} i {{ $labels.kubernetes_namespace }} er oppe"
       sla: respond within 1h, during office hours
       severity: critical
-    - alert: syfonarmesteleder-testalert
-      expr: sum(up{app="syfonarmesteleder",job="kubernetes-pods"}) < 2
-      for: 1m
-      description: "{{ $labels.app }} er nede i {{ $labels.kubernetes_namespace }}"
-      action: "`kubeclt describe pod {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}` for events, og `kubectl logs {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}` for logger"
-      sla: respond within 1h, during office hours
-      severity: warning
