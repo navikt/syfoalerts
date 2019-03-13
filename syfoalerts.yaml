@@ -24,3 +24,10 @@ spec:
       action: "Sjekk om {{ $labels.app }} i {{ $labels.kubernetes_namespace }} er oppe"
       sla: respond within 1h, during office hours
       severity: danger
+    - alert: syfo-syfosoknadvarsel-stoppet
+      expr: sum(syfosoknadvarsel.kafkalytter.stoppet) > 0
+      for: 3m
+      description: "{{ $labels.app }} sin kafkalytter har stoppet i {{ $labels.kubernetes_namespace }}"
+      action: "Kafkalytter stoppet på syfosoknadvarsel. Sjekk logger, og evt. `kubectl delete pod {{ $labels.kubernetes_pod_name }}` for å restarte"
+      sla: respond within 1h, during office hours
+      severity: danger
