@@ -25,14 +25,14 @@ spec:
       sla: respond within 1h, during office hours
       severity: danger
     - alert: syfosoknadvarsel-lytter-stoppet
-      expr: sum(syfosoknadvarsel.kafkalytter.stoppet) > 0
+      expr: sum(syfosoknadvarsel_kafkalytter_stoppet) > 0
       for: 3m
       description: "{{ $labels.app }} sin kafkalytter har stoppet i {{ $labels.kubernetes_namespace }}"
       action: "Kafkalytter stoppet på syfosoknadvarsel. Sjekk logger, og evt. `kubectl delete pod {{ $labels.kubernetes_pod_name }}` for å restarte"
       sla: respond within 1h, during office hours
       severity: danger
     - alert: syfogsak-lytter-stoppet
-      expr: sum(syfogsak.kafkalytter.stoppet) > 0
+      expr: sum(syfogsak_kafkalytter_stoppet) > 0
       for: 3m
       description: "{{ $labels.app }} sin kafkalytter har stoppet i {{ $labels.kubernetes_namespace }}"
       action: "Kafkalytter stoppet på syfogsak. Sjekk logger, og evt. `kubectl delete pod {{ $labels.kubernetes_pod_name }}` for å restarte"
