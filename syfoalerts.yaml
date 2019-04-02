@@ -45,3 +45,24 @@ spec:
       action: "Syfogsak har ikke behandlet soknader på 24 timer. Sjekk i errorloggen: https://logs.adeo.no/goto/c117ef2a4003c420e43d391f8007ddda , og evt. `kubectl delete pod {{ $labels.kubernetes_pod_name }}` for å restarte"
       sla: respond within 1h, during office hours
       severity: danger
+    - alert: syfovarsel-lytter-stoppet
+      expr: sum(syfovarsel_kafkalytter_stoppet) > 0
+      for: 3m
+      description: "{{ $labels.app }} sin kafkalytter har stoppet i {{ $labels.kubernetes_namespace }}"
+      action: "Kafkalytter stoppet på syfovarsel. Sjekk logger, og evt. `kubectl delete pod {{ $labels.kubernetes_pod_name }}` for å restarte"
+      sla: respond within 1h, during office hours
+      severity: danger
+    - alert: syfoaltinn-lytter-stoppet
+      expr: sum(syfoaltinn_kafkalytter_stoppet) > 0
+      for: 3m
+      description: "{{ $labels.app }} sin kafkalytter har stoppet i {{ $labels.kubernetes_namespace }}"
+      action: "Kafkalytter stoppet på syfoaltinn. Sjekk logger, og evt. `kubectl delete pod {{ $labels.kubernetes_pod_name }}` for å restarte"
+      sla: respond within 1h, during office hours
+      severity: danger
+    - alert: syfosyketilfelle-lytter-stoppet
+      expr: sum(syfosyketilfelle_kafkalytter_stoppet) > 0
+      for: 3m
+      description: "{{ $labels.app }} sin kafkalytter har stoppet i {{ $labels.kubernetes_namespace }}"
+      action: "Kafkalytter stoppet på syfosyketilfelle. Sjekk logger, og evt. `kubectl delete pod {{ $labels.kubernetes_pod_name }}` for å restarte"
+      sla: respond within 1h, during office hours
+      severity: danger
