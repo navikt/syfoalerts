@@ -19,7 +19,7 @@ spec:
       severity: danger
     - alert: syfo-asynkron-app-nede
       expr: up{app=~"pdf-gen|syfogsak|syfoinntektsmelding|syfosoknadvarsel|syfoaltinn|syfovarsel",job="kubernetes-pods"} == 0
-      for: 5m
+      for: 10m
       description: "{{ $labels.app }} er nede i {{ $labels.kubernetes_namespace }}"
       action: "Se `kubectl describe pod {{ $labels.kubernetes_pod_name }}` for events, og `kubectl logs {{ $labels.kubernetes_pod_name }}` for logger"
       sla: respond within 1h, during office hours
@@ -33,14 +33,14 @@ spec:
       severity: danger
     - alert: syfosoknadvarsel-lytter-stoppet
       expr: sum(syfosoknadvarsel_kafkalytter_stoppet_total) > 0
-      for: 3m
+      for: 5m
       description: "{{ $labels.app }} sin kafkalytter har stoppet i {{ $labels.kubernetes_namespace }}"
       action: "Kafkalytter stoppet på syfosoknadvarsel. Sjekk logger, og evt. `kubectl delete pod {{ $labels.kubernetes_pod_name }}` for å restarte"
       sla: respond within 1h, during office hours
       severity: danger
     - alert: syfogsak-lytter-stoppet
       expr: sum(syfogsak_kafkalytter_stoppet_total) > 0
-      for: 3m
+      for: 5m
       description: "{{ $labels.app }} sin kafkalytter har stoppet i {{ $labels.kubernetes_namespace }}"
       action: "Kafkalytter stoppet på syfogsak. Sjekk logger, og evt. `kubectl delete pod {{ $labels.kubernetes_pod_name }}` for å restarte"
       sla: respond within 1h, during office hours
@@ -54,28 +54,28 @@ spec:
       severity: danger
     - alert: syfovarsel-lytter-stoppet
       expr: sum(syfovarsel_kafkalytter_stoppet_total) > 0
-      for: 3m
+      for: 5m
       description: "{{ $labels.app }} sin kafkalytter har stoppet i {{ $labels.kubernetes_namespace }}"
       action: "Kafkalytter stoppet på syfovarsel. Sjekk logger, og evt. `kubectl delete pod {{ $labels.kubernetes_pod_name }}` for å restarte"
       sla: respond within 1h, during office hours
       severity: danger
     - alert: syfoaltinn-lytter-stoppet
       expr: sum(syfoaltinn_kafkalytter_stoppet_total) > 0
-      for: 3m
+      for: 5m
       description: "{{ $labels.app }} sin kafkalytter har stoppet i {{ $labels.kubernetes_namespace }}"
       action: "Kafkalytter stoppet på syfoaltinn. Sjekk logger, og evt. `kubectl delete pod {{ $labels.kubernetes_pod_name }}` for å restarte"
       sla: respond within 1h, during office hours
       severity: danger
     - alert: syfosyketilfelle-lytter-stoppet
       expr: sum(syfosyketilfelle_kafkalytter_stoppet_total) > 0
-      for: 3m
+      for: 5m
       description: "{{ $labels.app }} sin kafkalytter har stoppet i {{ $labels.kubernetes_namespace }}"
       action: "Kafkalytter stoppet på syfosyketilfelle. Sjekk logger, og evt. `kubectl delete pod {{ $labels.kubernetes_pod_name }}` for å restarte"
       sla: respond within 1h, during office hours
       severity: danger
     - alert: syfoservicestrangler-lytter-stoppet
       expr: sum(syfoservicestrangler_kafkalytter_stoppet_total) > 0
-      for: 3m
+      for: 5m
       description: "{{ $labels.app }} sin kafkalytter har stoppet i {{ $labels.kubernetes_namespace }}"
       action: "Kafkalytter stoppet på syfoservicestrangler. Sjekk logger, og evt. `kubectl delete pod {{ $labels.kubernetes_pod_name }}` for å restarte"
       sla: respond within 1h, during office hours
