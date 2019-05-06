@@ -11,14 +11,14 @@ spec:
       #prependText: '<!here> | '
   alerts:
     - alert: syfo-app-nede
-      expr: up{app=~"syfoarbeidsgivertilgang|syfonarmesteleder|syfoservicestrangler|syfosoknad|syfosyketilfelle",job="kubernetes-pods"} == 0
+      expr: up{app=~"syfoarbeidsgivertilgang|syfonarmesteleder|syfoservicestrangler|syfosoknad|syfosyketilfelle|syfosmregler",job="kubernetes-pods"} == 0
       for: 2m
       description: "{{ $labels.app }} er nede i {{ $labels.kubernetes_namespace }}"
       action: "Se `kubectl describe pod {{ $labels.kubernetes_pod_name }}` for events, og `kubectl logs {{ $labels.kubernetes_pod_name }}` for logger"
       sla: respond within 1h, during office hours
       severity: danger
     - alert: syfo-asynkron-app-nede
-      expr: up{app=~"pdf-gen|syfogsak|syfoinntektsmelding|syfosoknadvarsel|syfoaltinn|syfovarsel",job="kubernetes-pods"} == 0
+      expr: up{app=~"pdf-gen|syfogsak|syfoinntektsmelding|syfosoknadvarsel|syfoaltinn|syfovarsel|syfosmoppgave|syfosmarena|syfosmvarsel|syfosminfotrygd|syfosmregister|syfosmsak|syfosmmottak",job="kubernetes-pods"} == 0
       for: 10m
       description: "{{ $labels.app }} er nede i {{ $labels.kubernetes_namespace }}"
       action: "Se `kubectl describe pod {{ $labels.kubernetes_pod_name }}` for events, og `kubectl logs {{ $labels.kubernetes_pod_name }}` for logger"
@@ -26,6 +26,13 @@ spec:
       severity: danger
     - alert: syfo-mangler-metrikker
       expr: absent(up{app=~"pdf-gen|syfoarbeidsgivertilgang|syfogsak|syfoinntektsmelding|syfonarmesteleder|syfoservicestrangler|syfosoknadvarsel|syfosoknad|syfosyketilfelle|syfoaltinn|syfovarsel",job="kubernetes-pods"})
+      for: 5m
+      description: "{{ $labels.app }} rapporterer ingen metrikker i {{ $labels.kubernetes_namespace }}"
+      action: "Sjekk om {{ $labels.app }} i {{ $labels.kubernetes_namespace }} er oppe"
+      sla: respond within 1h, during office hours
+      severity: danger
+    - alert: syfosm-mangler-metrikker
+      expr: absent(up{app=~"syfosmoppgave|syfosmarena|syfosmvarsel|syfosminfotrygd|syfosmregister|syfosmsak|syfosmmottak|syfosmregler",job="kubernetes-pods"})
       for: 5m
       description: "{{ $labels.app }} rapporterer ingen metrikker i {{ $labels.kubernetes_namespace }}"
       action: "Sjekk om {{ $labels.app }} i {{ $labels.kubernetes_namespace }} er oppe"
@@ -78,5 +85,26 @@ spec:
       for: 5m
       description: "{{ $labels.app }} sin kafkalytter har stoppet i {{ $labels.kubernetes_namespace }}"
       action: "Kafkalytter stoppet på syfoservicestrangler. Sjekk logger, og evt. `kubectl delete pod {{ $labels.kubernetes_pod_name }}` for å restarte"
+      sla: respond within 1h, during office hours
+      severity: danger
+    - alert: syfosmvarsel-avvist-sm-usynk
+      expr: (sum(syfosmvarsel_avvist_sykmelding_mottatt_count) - sum(syfosmvarsel_avvist_sykmelding_opprettetvarsel_count)) > 100
+      for: 1h
+      description: "Syfosmvarsel har mottatt mange flere avviste sykmeldinger enn det er opprettet varsel for"
+      action: "Prosessering av avviste sykmeldinger i smvarsel kan ha stoppet pga feil. Sjekk logger, og evt. `kubectl delete pod {{ $labels.kubernetes_pod_name }}` for å restarte"
+      sla: respond within 1h, during office hours
+      severity: danger
+    - alert: syfosmmottak-ingen-mottatte-sykmeldinger
+      expr: sum(increase(syfosmmottak_incoming_message_count[24h])) < 0.8
+      for: 1m
+      description: "Syfosmmottak har ikke mottatt sykmeldinger på 24 timer"
+      action: "Sjekk logger, og evt. `kubectl delete pod {{ $labels.kubernetes_pod_name }}` for å restarte"
+      sla: respond within 1h, during office hours
+      severity: danger
+    - alert: syfosmmottak-ugyldige-sykmeldinger
+      expr: sum(syfosmmottak_invalid_message_no_notice_count) > 100
+      for: 10m
+      description: "Syfosmmottak har mottatt unormalt mange ugyldige sykmeldinger"
+      action: "Sjekk logger, og om det kan ha blitt innført feil"
       sla: respond within 1h, during office hours
       severity: danger
