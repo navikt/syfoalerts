@@ -11,14 +11,14 @@ spec:
       #prependText: '<!here> | '
   alerts:
     - alert: syfo-app-nede
-      expr: up{app=~"syfoarbeidsgivertilgang|syfonarmesteleder|syfoservicestrangler|syfosoknad|syfosyketilfelle|syfosmregler",job="kubernetes-pods"} == 0
+      expr: up{app=~"syfoarbeidsgivertilgang|syfonarmesteleder|syfoservicestrangler|syfosoknad|syfosyketilfelle|syfosmregler|syfosmregister",job="kubernetes-pods"} == 0
       for: 2m
       description: "{{ $labels.app }} er nede i {{ $labels.kubernetes_namespace }}"
       action: "Se `kubectl describe pod {{ $labels.kubernetes_pod_name }}` for events, og `kubectl logs {{ $labels.kubernetes_pod_name }}` for logger"
       sla: respond within 1h, during office hours
       severity: danger
     - alert: syfo-asynkron-app-nede
-      expr: up{app=~"pdf-gen|syfogsak|syfoinntektsmelding|syfosoknadvarsel|syfoaltinn|syfovarsel|syfosmoppgave|syfosmarena|syfosmvarsel|syfosminfotrygd|syfosmregister|syfosmsak|syfosmmottak",job="kubernetes-pods"} == 0
+      expr: up{app=~"pdf-gen|syfogsak|syfoinntektsmelding|syfosoknadvarsel|syfoaltinn|syfovarsel|syfosmoppgave|syfosmarena|syfosmvarsel|syfosminfotrygd|syfosmsak|syfosmmottak",job="kubernetes-pods"} == 0
       for: 10m
       description: "{{ $labels.app }} er nede i {{ $labels.kubernetes_namespace }}"
       action: "Se `kubectl describe pod {{ $labels.kubernetes_pod_name }}` for events, og `kubectl logs {{ $labels.kubernetes_pod_name }}` for logger"
@@ -88,7 +88,7 @@ spec:
       sla: respond within 1h, during office hours
       severity: danger
     - alert: syfosmvarsel-avvist-sm-usynk
-      expr: (sum(syfosmvarsel_avvist_sykmelding_mottatt_count) - sum(syfosmvarsel_avvist_sykmelding_opprettetvarsel_count)) > 100
+      expr: abs(sum(syfosmvarsel_avvist_sykmelding_mottatt_count) - sum(syfosmvarsel_avvist_sykmelding_opprettetvarsel_count)) > 100
       for: 1h
       description: "Syfosmvarsel har mottatt mange flere avviste sykmeldinger enn det er opprettet varsel for"
       action: "Prosessering av avviste sykmeldinger i smvarsel kan ha stoppet pga feil. Sjekk logger, og evt. `kubectl delete pod {{ $labels.kubernetes_pod_name }}` for å restarte"
