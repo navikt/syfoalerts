@@ -27,7 +27,7 @@ spec:
     - alert: syfo-kontinuerlig-restart
       expr: sum(increase(kube_pod_container_status_restarts_total{container=~"syfoarbeidsgivertilgang|syfonarmesteleder|syfoservicestrangler|syfosoknad|syfosyketilfelle|syfosmregler|syfosminfotrygd|syfosmregister|pdf-gen|syfogsak|syfoinntektsmelding|syfosoknadvarsel|syfoaltinn|syfovarsel|syfosmoppgave|syfosmarena|syfosmvarsel|syfosmsak|syfosmmottak"}[1h])) > 3
       for: 5m
-      description: "{{ $labels.app }} har restartet mer enn 3 ganger siste timen i {{ $labels.kubernetes_namespace }}"
+      description: "Flere pods restarter i {{ $labels.kubernetes_namespace }} siste timen. {{ $labels.app }} var den siste som gjorde det"
       action: "Se `kubectl describe pod {{ $labels.kubernetes_pod_name }}` for events, og `kubectl logs {{ $labels.kubernetes_pod_name }}` for logger"
       sla: respond within 1h, during office hours
       severity: danger
