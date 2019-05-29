@@ -25,7 +25,7 @@ spec:
       sla: respond within 1h, during office hours
       severity: danger
     - alert: syfo-mangler-metrikker
-      expr: absent(up{app=~"pdf-gen|syfoarbeidsgivertilgang|syfogsak|syfoinntektsmelding|syfonarmesteleder|syfoservicestrangler|syfosoknadvarsel|syfosoknad|syfosyketilfelle|syfoaltinn|syfovarsel",job="kubernetes-pods"})
+      expr: absent(up{app=~"pdf-gen|syfoarbeidsgivertilgang|syfogsak|syfoinntektsmelding|syfonarmesteleder|syfoservicestrangler|syfosoknadvarsel|syfosoknad|syfosyketilfelle|syfoaltinn|syfovarsel|syfotekster",job="kubernetes-pods"})
       for: 5m
       description: "{{ $labels.app }} rapporterer ingen metrikker i {{ $labels.kubernetes_namespace }}"
       action: "Sjekk om {{ $labels.app }} i {{ $labels.kubernetes_namespace }} er oppe"
@@ -106,12 +106,5 @@ spec:
       for: 10m
       description: "Syfosmmottak har mottatt unormalt mange ugyldige sykmeldinger"
       action: "Sjekk logger, og om det kan ha blitt innført feil"
-      sla: respond within 1h, during office hours
-      severity: danger
-    - alert: syfotekster-mangler-metrikker
-      expr: absent(up{app=~"syfotekster",job="kubernetes-pods"})
-      for: 5m
-      description: "{{ $labels.app }} rapporterer ingen metrikker i {{ $labels.kubernetes_namespace }}"
-      action: "Sjekk om {{ $labels.app }} i {{ $labels.kubernetes_namespace }} er oppe"
       sla: respond within 1h, during office hours
       severity: danger
