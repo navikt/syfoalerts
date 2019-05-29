@@ -108,3 +108,10 @@ spec:
       action: "Sjekk logger, og om det kan ha blitt innført feil"
       sla: respond within 1h, during office hours
       severity: danger
+    - alert: syfotekster-mangler-metrikker
+      expr: absent(up{app=~"syfotekster",job="kubernetes-pods"})
+      for: 5m
+      description: "{{ $labels.app }} rapporterer ingen metrikker i {{ $labels.kubernetes_namespace }}"
+      action: "Sjekk om {{ $labels.app }} i {{ $labels.kubernetes_namespace }} er oppe"
+      sla: respond within 1h, during office hours
+      severity: danger
