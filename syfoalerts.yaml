@@ -109,9 +109,9 @@ spec:
       sla: respond within 1h, during office hours
       severity: danger
     - alert: syfosm-error-logging
-      expr: sum(rate(logd_messages_total{log_app=~"syfosmoppgave|syfosmarena|syfosmvarsel|syfosminfotrygd|syfosmregister|syfosmsak|syfosmmottak|syfosmregler",log_level="Error",job="kubernetes-pods"})) > 0
+      expr: sum(rate(logd_messages_total{log_app=~"syfosmoppgave|syfosmarena|syfosmvarsel|syfosminfotrygd|syfosmregister|syfosmsak|syfosmmottak|syfosmregler",log_level="Error",job="kubernetes-pods"}[5m])) > 0
       for: 5m
       description: "{{ $labels.app }} rapporterer error i loggene i {{ $labels.kubernetes_namespace }}"
-      action: "Sjekk hvorfor {{ $labels.app }} i {{ $labels.kubernetes_namespace }} logger errors"
+      action: "Sjekk hvorfor {{ $labels.app }} i {{ $labels.kubernetes_namespace }} har i løpet av dei siste 5 minuttene logget Error"
       sla: respond within 1h, during office hours
       severity: danger
