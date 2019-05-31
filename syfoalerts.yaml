@@ -11,7 +11,7 @@ spec:
       #prependText: '<!here> | '
   alerts:
     - alert: syfo-app-nede
-      expr: up{app=~"syfoarbeidsgivertilgang|syfonarmesteleder|syfoservicestrangler|syfosoknad|syfosyketilfelle|syfosmregler|syfosmregister",job="kubernetes-pods"} == 0
+      expr: up{app=~"syfoarbeidsgivertilgang|syfonarmesteleder|syfoservicestrangler|syfosoknad|syfosyketilfelle|syfosmregler|syfosmregister|syfotekster",job="kubernetes-pods"} == 0
       for: 2m
       description: "{{ $labels.app }} er nede i {{ $labels.kubernetes_namespace }}"
       action: "Se `kubectl describe pod {{ $labels.kubernetes_pod_name }}` for events, og `kubectl logs {{ $labels.kubernetes_pod_name }}` for logger"
