@@ -1,0 +1,19 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Alert"
+metadata:
+  name: syfoalerts-test
+  labels:
+    team: teamsykefravr
+spec:
+  receivers:
+    slack:
+      channel: '#syfo-alerts-dev'
+      #prependText: '<!here> | '
+  alerts:
+    - alert: syfo-kontinuerlig-restart
+      expr: sum(increase(kube_pod_container_status_restarts_total{container=~"syfoarbeidsgivertilgang|syfonarmesteleder|syfoservicestrangler|syfosoknad|syfosyketilfelle|syfosmregler|syfosminfotrygd|syfosmregister|pdf-gen|syfogsak|syfoinntektsmelding|syfosoknadvarsel|syfoaltinn|syfovarsel|syfosmoppgave|syfosmarena|syfosmvarsel|syfosmsak|syfosmmottak"}[30m])) by (container) > 2
+      for: 5m
+      description: "{{ $labels.container }} har restartet flere ganger siste halvtimen!"
+      action: "Se `kubectl describe pod {{ $labels.container }}` for events, og `kubectl logs {{ $labels.container }}` for logger"
+      sla: respond within 1h, during office hours
+      severity: danger
