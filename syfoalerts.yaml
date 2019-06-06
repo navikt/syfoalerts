@@ -101,13 +101,6 @@ spec:
       action: "Prosessering av avviste sykmeldinger i smvarsel kan ha stoppet pga feil. Sjekk logger, og evt. `kubectl delete pod {{ $labels.kubernetes_pod_name }}` for å restarte"
       sla: respond within 1h, during office hours
       severity: danger
-    - alert: syfosmmottak-ingen-mottatte-sykmeldinger
-      expr: sum(increase(syfosmmottak_incoming_message_count[24h])) < 0.8
-      for: 1m
-      description: "Syfosmmottak har ikke mottatt sykmeldinger på 24 timer"
-      action: "Sjekk logger, og evt. `kubectl delete pod {{ $labels.kubernetes_pod_name }}` for å restarte"
-      sla: respond within 1h, during office hours
-      severity: danger
     - alert: syfosmmottak-ugyldige-sykmeldinger
       expr: sum(syfosmmottak_invalid_message_no_notice_count) > 100
       for: 10m
