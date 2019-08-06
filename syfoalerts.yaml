@@ -94,13 +94,6 @@ spec:
       action: "Kafkalytter stoppet på syfoservicestrangler. Sjekk logger, og evt. `kubectl delete pod {{ $labels.kubernetes_pod_name }}` for å restarte"
       sla: respond within 1h, during office hours
       severity: danger
-    - alert: syfosmvarsel-avvist-sm-usynk
-      expr: abs(sum(syfosmvarsel_avvist_sykmelding_mottatt_count) - sum(syfosmvarsel_avvist_sykmelding_opprettetvarsel_count)) > 100
-      for: 1h
-      description: "Syfosmvarsel har mottatt mange flere avviste sykmeldinger enn det er opprettet varsel for"
-      action: "Prosessering av avviste sykmeldinger i smvarsel kan ha stoppet pga feil. Sjekk logger, og evt. `kubectl delete pod {{ $labels.kubernetes_pod_name }}` for å restarte"
-      sla: respond within 1h, during office hours
-      severity: danger
     - alert: syfosmmottak-ugyldige-sykmeldinger
       expr: sum(syfosmmottak_invalid_message_no_notice_count) > 100
       for: 10m
