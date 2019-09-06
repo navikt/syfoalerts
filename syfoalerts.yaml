@@ -113,7 +113,7 @@ spec:
       for: 3m
       description: "{{ $labels.log_app }} rapporterer error i loggene"
       action: "Sjekk loggene til {{ $labels.log_app }} i {{ $labels.log_namespace }}, for å se hvorfor det er så mye feil"
-  - alert: syfosminfotrygd-smikkeokko
+    - alert: syfosminfotrygd-smikkeokko
       expr: syfosminfotrygd_smikkeok_gauge{log_app=~"syfosminfotrygd"} > 0
       for: 3m
       description: "Meldinger er kommet inn på QA.P414.AS07_SMIKKEOK"
