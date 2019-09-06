@@ -18,21 +18,21 @@ spec:
       sla: respond within 1h, during office hours
       severity: danger
     - alert: syfo-asynkron-app-nede
-      expr: up{app=~"pdf-gen|syfogsak|syfoinntektsmelding|syfosoknadvarsel|syfoaltinn|syfovarsel|syfosmoppgave|syfosmarena|syfosmvarsel|syfosminfotrygd|syfosmsak|syfosmmottak|syfosmapprec",job="kubernetes-pods"} == 0
+      expr: up{app=~"pdf-gen|syfogsak|syfosoknadvarsel|syfoaltinn|syfovarsel|syfosmoppgave|syfosmarena|syfosmvarsel|syfosminfotrygd|syfosmsak|syfosmmottak|syfosmapprec",job="kubernetes-pods"} == 0
       for: 10m
       description: "{{ $labels.app }} er nede i {{ $labels.kubernetes_namespace }}"
       action: "Se `kubectl describe pod {{ $labels.kubernetes_pod_name }}` for events, og `kubectl logs {{ $labels.kubernetes_pod_name }}` for logger"
       sla: respond within 1h, during office hours
       severity: danger
     - alert: syfo-kontinuerlig-restart
-      expr: sum(increase(kube_pod_container_status_restarts_total{container=~"syfoarbeidsgivertilgang|syfonarmesteleder|syfoservicestrangler|syfosoknad|syfosyketilfelle|syfosmregler|syfosminfotrygd|syfosmregister|pdf-gen|syfogsak|syfoinntektsmelding|syfosoknadvarsel|syfoaltinn|syfovarsel|syfosmoppgave|syfosmarena|syfosmvarsel|syfosmsak|syfosmmottak|syfosmapprec"}[30m])) by (container) > 2
+      expr: sum(increase(kube_pod_container_status_restarts_total{container=~"syfoarbeidsgivertilgang|syfonarmesteleder|syfoservicestrangler|syfosoknad|syfosyketilfelle|syfosmregler|syfosminfotrygd|syfosmregister|pdf-gen|syfogsak|syfosoknadvarsel|syfoaltinn|syfovarsel|syfosmoppgave|syfosmarena|syfosmvarsel|syfosmsak|syfosmmottak|syfosmapprec"}[30m])) by (container) > 2
       for: 5m
       description: "{{ $labels.container }} har restartet flere ganger siste halvtimen!"
       action: "Se `kubectl describe pod {{ $labels.container }}` for events, og `kubectl logs {{ $labels.container }}` for logger"
       sla: respond within 1h, during office hours
       severity: danger
     - alert: syfo-mangler-metrikker
-      expr: absent(up{app=~"pdf-gen|syfoarbeidsgivertilgang|syfogsak|syfoinntektsmelding|syfonarmesteleder|syfoservicestrangler|syfosoknadvarsel|syfosoknad|syfosyketilfelle|syfoaltinn|syfovarsel|syfotekster",job="kubernetes-pods"})
+      expr: absent(up{app=~"pdf-gen|syfoarbeidsgivertilgang|syfogsak|syfonarmesteleder|syfoservicestrangler|syfosoknadvarsel|syfosoknad|syfosyketilfelle|syfoaltinn|syfovarsel|syfotekster",job="kubernetes-pods"})
       for: 5m
       description: "{{ $labels.app }} rapporterer ingen metrikker i {{ $labels.kubernetes_namespace }}"
       action: "Sjekk om {{ $labels.app }} i {{ $labels.kubernetes_namespace }} er oppe"
@@ -109,7 +109,7 @@ spec:
       sla: respond within 1h, during office hours
       severity: danger
     - alert: syfo-errorlogging
-      expr: (100 * sum by (log_app) (rate(logd_messages_total{log_app=~"pdf-gen|syfoarbeidsgivertilgang|syfogsak|syfoinntektsmelding|syfonarmesteleder|syfoservicestrangler|syfosoknadvarsel|syfosoknad|syfosyketilfelle|syfoaltinn|syfovarsel",log_level="Error"}[5m])) / sum by (log_app) (rate(logd_messages_total{log_app=~"pdf-gen|syfoarbeidsgivertilgang|syfogsak|syfoinntektsmelding|syfonarmesteleder|syfoservicestrangler|syfosoknadvarsel|syfosoknad|syfosyketilfelle|syfoaltinn|syfovarsel"}[5m]))) > 10
+      expr: (100 * sum by (log_app) (rate(logd_messages_total{log_app=~"pdf-gen|syfoarbeidsgivertilgang|syfogsak|syfonarmesteleder|syfoservicestrangler|syfosoknadvarsel|syfosoknad|syfosyketilfelle|syfoaltinn|syfovarsel",log_level="Error"}[5m])) / sum by (log_app) (rate(logd_messages_total{log_app=~"pdf-gen|syfoarbeidsgivertilgang|syfogsak|syfonarmesteleder|syfoservicestrangler|syfosoknadvarsel|syfosoknad|syfosyketilfelle|syfoaltinn|syfovarsel"}[5m]))) > 10
       for: 3m
       description: "{{ $labels.log_app }} rapporterer error i loggene"
       action: "Sjekk loggene til {{ $labels.log_app }} i {{ $labels.log_namespace }}, for å se hvorfor det er så mye feil"
