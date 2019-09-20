@@ -18,21 +18,21 @@ spec:
       sla: respond within 1h, during office hours
       severity: danger
     - alert: syfo-asynkron-app-nede
-      expr: up{app=~"pdf-gen|syfogsak|syfosoknadvarsel|syfoaltinn|syfovarsel",job="kubernetes-pods"} == 0
+      expr: up{app=~"pdf-gen|syfogsak|syfosoknadvarsel|syfoaltinn",job="kubernetes-pods"} == 0
       for: 10m
       description: "{{ $labels.app }} er nede i {{ $labels.kubernetes_namespace }}"
       action: "Se `kubectl describe pod {{ $labels.kubernetes_pod_name }}` for events, og `kubectl logs {{ $labels.kubernetes_pod_name }}` for logger"
       sla: respond within 1h, during office hours
       severity: danger
     - alert: syfo-kontinuerlig-restart
-      expr: sum(increase(kube_pod_container_status_restarts_total{container=~"syfoarbeidsgivertilgang|syfonarmesteleder|syfoservicestrangler|syfosoknad|syfosyketilfelle|pdf-gen|syfogsak|syfosoknadvarsel|syfoaltinn|syfovarsel"}[30m])) by (container) > 2
+      expr: sum(increase(kube_pod_container_status_restarts_total{container=~"syfoarbeidsgivertilgang|syfonarmesteleder|syfoservicestrangler|syfosoknad|syfosyketilfelle|pdf-gen|syfogsak|syfosoknadvarsel|syfoaltinn"}[30m])) by (container) > 2
       for: 5m
       description: "{{ $labels.container }} har restartet flere ganger siste halvtimen!"
       action: "Se `kubectl describe pod {{ $labels.container }}` for events, og `kubectl logs {{ $labels.container }}` for logger"
       sla: respond within 1h, during office hours
       severity: danger
     - alert: syfo-mangler-metrikker
-      expr: absent(up{app=~"pdf-gen|syfoarbeidsgivertilgang|syfogsak|syfonarmesteleder|syfoservicestrangler|syfosoknadvarsel|syfosoknad|syfosyketilfelle|syfoaltinn|syfovarsel|syfotekster",job="kubernetes-pods"})
+      expr: absent(up{app=~"pdf-gen|syfoarbeidsgivertilgang|syfogsak|syfonarmesteleder|syfoservicestrangler|syfosoknadvarsel|syfosoknad|syfosyketilfelle|syfoaltinn|syfotekster",job="kubernetes-pods"})
       for: 5m
       description: "{{ $labels.app }} rapporterer ingen metrikker i {{ $labels.kubernetes_namespace }}"
       action: "Sjekk om {{ $labels.app }} i {{ $labels.kubernetes_namespace }} er oppe"
@@ -59,13 +59,6 @@ spec:
       action: "Syfogsak har ikke behandlet soknader på 24 timer. Sjekk i errorloggen: https://logs.adeo.no/goto/c117ef2a4003c420e43d391f8007ddda , og evt. `kubectl delete pod {{ $labels.kubernetes_pod_name }}` for å restarte"
       sla: respond within 1h, during office hours
       severity: danger
-    - alert: syfovarsel-lytter-stoppet
-      expr: sum(increase(syfovarsel_kafkalytter_stoppet_total[30m])) > 10
-      for: 10m
-      description: "{{ $labels.app }} sin kafkalytter har stoppet i {{ $labels.kubernetes_namespace }}"
-      action: "Kafkalytter stoppet på syfovarsel. Sjekk logger, og evt. `kubectl delete pod {{ $labels.kubernetes_pod_name }}` for å restarte"
-      sla: respond within 1h, during office hours
-      severity: danger
     - alert: syfoaltinn-lytter-stoppet
       expr: sum(increase(syfoaltinn_kafkalytter_stoppet_total[30m])) > 10
       for: 10m
@@ -88,7 +81,7 @@ spec:
       sla: respond within 1h, during office hours
       severity: danger
     - alert: syfo-errorlogging
-      expr: (100 * sum by (log_app) (rate(logd_messages_total{log_app=~"pdf-gen|syfoarbeidsgivertilgang|syfogsak|syfonarmesteleder|syfoservicestrangler|syfosoknadvarsel|syfosoknad|syfosyketilfelle|syfoaltinn|syfovarsel",log_level="Error"}[5m])) / sum by (log_app) (rate(logd_messages_total{log_app=~"pdf-gen|syfoarbeidsgivertilgang|syfogsak|syfonarmesteleder|syfoservicestrangler|syfosoknadvarsel|syfosoknad|syfosyketilfelle|syfoaltinn|syfovarsel"}[5m]))) > 10
+      expr: (100 * sum by (log_app) (rate(logd_messages_total{log_app=~"pdf-gen|syfoarbeidsgivertilgang|syfogsak|syfonarmesteleder|syfoservicestrangler|syfosoknadvarsel|syfosoknad|syfosyketilfelle|syfoaltinn",log_level="Error"}[5m])) / sum by (log_app) (rate(logd_messages_total{log_app=~"pdf-gen|syfoarbeidsgivertilgang|syfogsak|syfonarmesteleder|syfoservicestrangler|syfosoknadvarsel|syfosoknad|syfosyketilfelle|syfoaltinn"}[5m]))) > 10
       for: 3m
       description: "{{ $labels.log_app }} rapporterer error i loggene"
       action: "Sjekk loggene til {{ $labels.log_app }} i {{ $labels.log_namespace }}, for å se hvorfor det er så mye feil"
