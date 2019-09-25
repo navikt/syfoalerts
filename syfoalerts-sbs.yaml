@@ -11,14 +11,14 @@ spec:
       #prependText: '<!here> | '
   alerts:
     - alert: syfo-sbs-app-nede
-      expr: up{app=~"syfoapi|sykefravaer|sykefravaerarbeidsgiver|sykepengesoknad",job="kubernetes-pods"} == 0
+      expr: up{app=~"sykefravaerarbeidsgiver",job="kubernetes-pods"} == 0
       for: 2m
       description: "{{ $labels.app }} er nede i {{ $labels.kubernetes_namespace }}"
       action: "Se `kubectl describe pod {{ $labels.kubernetes_pod_name }}` for events, og `kubectl logs {{ $labels.kubernetes_pod_name }}` for logger"
       sla: respond within 1h, during office hours
       severity: danger
     - alert: syfo-sbs-mangler-metrikker
-      expr: absent(up{app=~"syfoapi|sykefravaer|sykefravaerarbeidsgiver|sykepengesoknad",job="kubernetes-pods"})
+      expr: absent(up{app=~"sykefravaerarbeidsgiver",job="kubernetes-pods"})
       for: 5m
       description: "{{ $labels.app }} rapporterer ingen metrikker i {{ $labels.kubernetes_namespace }}"
       action: "Sjekk om {{ $labels.app }} i {{ $labels.kubernetes_namespace }} er oppe"
