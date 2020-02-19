@@ -11,17 +11,17 @@ spec:
       #prependText: '<!here> | '
   alerts:
     - alert: syfo-app-nede
-      expr: up{app=~"syfoarbeidsgivertilgang|syfonarmesteleder|syfoservicestrangler|syfosyketilfelle|syfotekster",job="kubernetes-pods"} == 0
+      expr: kube_deployment_status_replicas_available{deployment=~"syfoarbeidsgivertilgang|syfonarmesteleder|syfoservicestrangler|syfosyketilfelle|syfotekster",job="kubernetes-pods"} == 0
       for: 2m
-      description: "{{ $labels.app }} er nede i {{ $labels.kubernetes_namespace }}"
-      action: "Se `kubectl describe pod {{ $labels.kubernetes_pod_name }}` for events, og `kubectl logs {{ $labels.kubernetes_pod_name }}` for logger"
+      description: "{{ $labels.deployment }} er nede"
+      action: "Se `kubectl kubectl get pod  | grep {{ $labels.deployment }}` for å se podder, og `kubectl logs $podnavn` for logger"
       sla: respond within 1h, during office hours
       severity: danger
     - alert: syfo-asynkron-app-nede
-      expr: up{app=~"pdf-gen",job="kubernetes-pods"} == 0
+      expr: kube_deployment_status_replicas_available{deployment=~""pdf-gen"} == 0
       for: 10m
-      description: "{{ $labels.app }} er nede i {{ $labels.kubernetes_namespace }}"
-      action: "Se `kubectl describe pod {{ $labels.kubernetes_pod_name }}` for events, og `kubectl logs {{ $labels.kubernetes_pod_name }}` for logger"
+      description: "{{ $labels.deployment }} er nede"
+      action: "Se `kubectl kubectl get pod  | grep {{ $labels.deployment }}` for å se podder, og `kubectl logs $podnavn` for logger"
       sla: respond within 1h, during office hours
       severity: danger
     - alert: syfo-kontinuerlig-restart
