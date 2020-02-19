@@ -23,6 +23,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          cluster: prod-fss
+          cluster: prod-sbs
           team: teamsykefravr
           rawresources: syfoalerts-sbs.yaml
