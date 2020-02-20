@@ -1,0 +1,21 @@
+name: Deploy to dev
+on:
+  push:
+    branches:
+      - '*'
+      - '!master'
+jobs:
+  deploy_prod:
+    name: Deploy alert til dev
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
+      - name: Call deployment-cli/action and apply yaml file to dev-fss
+        uses: navikt/deployment-cli/action@0.4.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          cluster: dev-fss
+          team: teamsykefravr
+          rawresources: test/syfoalert_test.yaml

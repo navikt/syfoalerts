@@ -11,14 +11,14 @@ spec:
       #prependText: '<!here> | '
   alerts:
     - alert: syfo-sbs-app-nede
-      expr: up{app=~"sykefravaerarbeidsgiver",job="kubernetes-pods"} == 0
+      expr: kube_deployment_status_replicas_available{deployment=~"sykefravaerarbeidsgiver|sykefravaer"} == 0
       for: 2m
-      description: "{{ $labels.app }} er nede i {{ $labels.kubernetes_namespace }}"
-      action: "Se `kubectl describe pod {{ $labels.kubernetes_pod_name }}` for events, og `kubectl logs {{ $labels.kubernetes_pod_name }}` for logger"
+      description: "{{ $labels.deployment }} er nede"
+      action: "Se `kubectl kubectl get pod  | grep {{ $labels.deployment }}` for å se podder, og `kubectl logs $podnavn` for logger"
       sla: respond within 1h, during office hours
       severity: danger
     - alert: syfo-sbs-mangler-metrikker
-      expr: absent(up{app=~"sykefravaerarbeidsgiver",job="kubernetes-pods"})
+      expr: absent(up{app=~"sykefravaerarbeidsgiver|sykefravaer",job="kubernetes-pods"})
       for: 5m
       description: "{{ $labels.app }} rapporterer ingen metrikker i {{ $labels.kubernetes_namespace }}"
       action: "Sjekk om {{ $labels.app }} i {{ $labels.kubernetes_namespace }} er oppe"
