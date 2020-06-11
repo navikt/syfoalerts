@@ -16,4 +16,4 @@ jobs:
         env:
           CLUSTER: dev-fss
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          RESOURCE: test/syfoalerts_test.yaml
+          RESOURCE: test/syfoalert_test.yaml
