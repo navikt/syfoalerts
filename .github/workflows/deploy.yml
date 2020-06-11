@@ -10,19 +10,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v1
-      - name: Call deployment-cli/action and apply yaml file to prod-fss
-        uses: navikt/deployment-cli/action@0.4.0
+      - name: Apply alert configuration file to prod-fss
+        uses: nais/deploy/actions/deploy@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          cluster: prod-fss
-          team: teamsykefravr
-          rawresources: syfoalerts.yaml
-      - name: Call deployment-cli/action and apply yaml file to prod-sbs
-        uses: navikt/deployment-cli/action@0.4.0
+          CLUSTER: prod-fss
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          RESOURCE: syfoalerts.yaml
+      - name: Apply alert configuration file to prod-sbs
+        uses: nais/deploy/actions/deploy@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          cluster: prod-sbs
-          team: teamsykefravr
-          rawresources: syfoalerts-sbs.yaml
+          CLUSTER: prod-sbs
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          RESOURCE: syfoalerts-sbs.yaml
+  

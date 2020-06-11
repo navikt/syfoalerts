@@ -11,11 +11,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v1
-      - name: Call deployment-cli/action and apply yaml file to dev-fss
-        uses: navikt/deployment-cli/action@0.4.0
+      - name: Apply alert configuration file to dev-fss
+        uses: nais/deploy/actions/deploy@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          cluster: dev-fss
-          team: teamsykefravr
-          rawresources: test/syfoalert_test.yaml
+          CLUSTER: dev-fss
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          RESOURCE: test/syfoalerts_test.yaml
