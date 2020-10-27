@@ -12,7 +12,7 @@ spec:
       #prependText: '<!here> | '
   alerts:
     - alert: syfo-app-nede
-      expr: kube_deployment_status_replicas_available{deployment=~"syfoarbeidsgivertilgang|syfonarmesteleder|syfoservicestrangler|syfosyketilfelle|syfotekster",job="kubernetes-pods"} == 0
+      expr: kube_deployment_status_replicas_available{deployment=~"syfoarbeidsgivertilgang|syfoservicestrangler|syfosyketilfelle|syfotekster",job="kubernetes-pods"} == 0
       for: 2m
       description: "{{ $labels.deployment }} er nede"
       action: "Se `kubectl kubectl get pod  | grep {{ $labels.deployment }}` for å se podder, og `kubectl logs $podnavn` for logger"
@@ -26,14 +26,14 @@ spec:
       sla: respond within 1h, during office hours
       severity: danger
     - alert: syfo-kontinuerlig-restart
-      expr: sum(increase(kube_pod_container_status_restarts_total{container=~"syfoarbeidsgivertilgang|syfonarmesteleder|syfoservicestrangler|syfosyketilfelle|pdf-gen"}[30m])) by (container) > 2
+      expr: sum(increase(kube_pod_container_status_restarts_total{container=~"syfoarbeidsgivertilgang|syfoservicestrangler|syfosyketilfelle|pdf-gen"}[30m])) by (container) > 2
       for: 5m
       description: "{{ $labels.container }} har restartet flere ganger siste halvtimen!"
       action: "Se `kubectl describe pod {{ $labels.container }}` for events, og `kubectl logs {{ $labels.container }}` for logger"
       sla: respond within 1h, during office hours
       severity: danger
     - alert: syfo-mangler-metrikker
-      expr: absent(up{app=~"pdf-gen|syfoarbeidsgivertilgang|syfonarmesteleder|syfoservicestrangler|syfosyketilfelle|syfotekster",job="kubernetes-pods"})
+      expr: absent(up{app=~"pdf-gen|syfoarbeidsgivertilgang|syfoservicestrangler|syfosyketilfelle|syfotekster",job="kubernetes-pods"})
       for: 5m
       description: "{{ $labels.app }} rapporterer ingen metrikker i {{ $labels.kubernetes_namespace }}"
       action: "Sjekk om {{ $labels.app }} i {{ $labels.kubernetes_namespace }} er oppe"
@@ -54,7 +54,7 @@ spec:
       sla: respond within 1h, during office hours
       severity: danger
     - alert: syfo-errorlogging
-      expr: (100 * sum by (log_app) (rate(logd_messages_total{log_app=~"pdf-gen|syfoarbeidsgivertilgang|syfonarmesteleder|syfoservicestrangler|syfosyketilfelle",log_level="Error"}[5m])) / sum by (log_app) (rate(logd_messages_total{log_app=~"pdf-gen|syfoarbeidsgivertilgang|syfonarmesteleder|syfoservicestrangler|syfosyketilfelle"}[5m]))) > 10
+      expr: (100 * sum by (log_app) (rate(logd_messages_total{log_app=~"pdf-gen|syfoarbeidsgivertilgang|syfoservicestrangler|syfosyketilfelle",log_level="Error"}[5m])) / sum by (log_app) (rate(logd_messages_total{log_app=~"pdf-gen|syfoarbeidsgivertilgang|syfoservicestrangler|syfosyketilfelle"}[5m]))) > 10
       for: 3m
       description: "{{ $labels.log_app }} rapporterer error i loggene"
       action: "Sjekk loggene til {{ $labels.log_app }} i {{ $labels.log_namespace }}, for å se hvorfor det er så mye feil"
