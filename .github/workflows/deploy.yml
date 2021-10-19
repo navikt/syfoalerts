@@ -16,10 +16,4 @@ jobs:
           CLUSTER: prod-fss
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           RESOURCE: syfoalerts.yaml
-      - name: Apply alert configuration file to prod-sbs
-        uses: nais/deploy/actions/deploy@master
-        env:
-          CLUSTER: prod-sbs
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          RESOURCE: syfoalerts-sbs.yaml
   
